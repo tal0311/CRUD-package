@@ -1,5 +1,4 @@
 'use strict'
-console.log('package')
 
 var items = [
   {
@@ -24,6 +23,8 @@ class CRUD {
     this.isCache = isCache
     this.lcKey = key
     this.isAsync = promiseBased
+    this.activities = []
+    console.log('CRUD service is online')
   }
 
   query() {
@@ -34,20 +35,29 @@ class CRUD {
     this.#setItemId()
     this.#setTimestamp(this.data)
     this.#saveToStorage()
+    this.#addActivity(
+      `All data with ${
+        this.lcKey
+          ? `with local storage key \"${this.lcKey}\"`
+          : 'without local storage key'
+      } was requested`
+    )
     return this.isAsync ? Promise.resolve(this.data) : this.data
   }
   remove(entityId) {
     const idx = this.data.findIndex((item) => item._id === entityId)
     this.data.splice(idx, 1)
+    this.#addActivity(`item with id:${entityId} was removed`)
   }
   update(entity) {
     const idx = this.data.findIndex((item) => item._id === entity._id)
     entity = this.#setUpdateStamp(entity)
-    console.log('updatetime:', entity)
     this.data.splice(idx, 1, entity)
     this.#saveToStorage()
+    this.#addActivity(`item with id:${entity._id} was updated`)
   }
   getById(entityId) {
+    this.#addActivity(`item with id:${entityId} was requested`)
     return this.data.find((item) => item._id === entityId)
   }
   add(entity) {
@@ -57,6 +67,7 @@ class CRUD {
     )
     this.data = [...this.data, addedEntity]
     this.#saveToStorage()
+    this.#addActivity(`item with _id: ${addedEntity._id} was added`)
     return this.isAsync ? Promise.resolve(addedEntity) : addedEntity
   }
   getEmptyItem() {
@@ -72,11 +83,11 @@ class CRUD {
         item[key] = 0
       }
     }
+    this.#addActivity('getting empty item')
     return item
   }
   // private methods
   #setTimestamp(data) {
-    console.log('before stamp:', data)
     this.data = data.map((item) => {
       return item.timeStamp ? item : { ...item, timeStamp: Date.now() }
     })
@@ -85,7 +96,7 @@ class CRUD {
     item.updatedStamp = Date.now()
     return item
   }
-  #makeId(length = 5) {
+  #makeId(length = 8) {
     var txt = ''
     var possible =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -93,7 +104,7 @@ class CRUD {
     for (var i = 0; i < length; i++) {
       txt += possible.charAt(Math.floor(Math.random() * possible.length))
     }
-    console.log(txt)
+
     return txt
   }
   #setItemId() {
@@ -101,44 +112,20 @@ class CRUD {
       return item._id ? item : { _id: this.#makeId(), ...item }
     })
   }
+  #addActivity(desc) {
+    const activity = {
+      _id: 'ACT' + this.#makeId(),
+      desc,
+      timeStamp: Date.now(),
+    }
+    this.activities.push(activity)
+  }
   #saveToStorage() {
     localStorage.setItem(this.lcKey, JSON.stringify(this.data))
   }
   #loadFromStorage() {
-    console.log(localStorage)
     return JSON.parse(localStorage.getItem(this.lcKey))
   }
 }
 
-const crudService = new CRUD(items, true, 'tasks', false)
-// console.log('crudService:', crudService)
-
-// console.log(remove('101'))
-// function remove(taskId) {
-//   crudService.remove(taskId)
-// }
-
-const task = {
-  _id: 'FHhA7',
-  content: 'added',
-}
-
-update(task)
-function update(task) {
-  crudService.update(task)
-}
-
-console.log(query())
-function query() {
-  return crudService.query()
-}
-
-// console.log('getting item:', getById('101'))
-// function getById(taskId) {
-//   return crudService.getById(taskId)
-// }
-
-// getEmptyTask()
-// function getEmptyTask() {
-//   console.log(crudService.getEmptyItem())
-// }
+export default CRUD
