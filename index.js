@@ -3,34 +3,23 @@ console.log('package')
 
 var items = [
   {
-    _id: '101',
     content: 'some task',
     isDone: true,
-    createdAt: Date.now(),
-    reviews: [
-      {
-        _id: '101',
-        reviewContent: 'some content',
-      },
-    ],
   },
   {
-    _id: '102',
     content: 'some task',
     timeStamp: 3333333,
   },
   {
-    _id: '103',
     content: 'some task',
   },
   {
-    _id: '104',
     content: 'some task',
   },
 ]
 
 class CRUD {
-  constructor(data, isCache, key, promiseBased = false) {
+  constructor(data, isCache, key = null, promiseBased = false) {
     this.data = data
     this.isCache = isCache
     this.lcKey = key
@@ -40,9 +29,9 @@ class CRUD {
   query() {
     const data = this.#loadFromStorage()
     if (data && data.length > 0) {
-      this.isAsync ? Promise.resolve(data) : data
       this.data = data
     }
+    this.#setItemId()
     this.#setTimestamp(this.data)
     this.#saveToStorage()
     return this.isAsync ? Promise.resolve(this.data) : this.data
@@ -58,13 +47,9 @@ class CRUD {
     this.data.splice(idx, 1, entity)
     this.#saveToStorage()
   }
-  setData(data) {
-    this.data = data
-  }
   getById(entityId) {
     return this.data.find((item) => item._id === entityId)
   }
-
   add(entity) {
     const addedEntity = Object.assign(
       { _id: this.#makeId(), timeStamp: Date.now() },
@@ -74,7 +59,6 @@ class CRUD {
     this.#saveToStorage()
     return this.isAsync ? Promise.resolve(addedEntity) : addedEntity
   }
-
   getEmptyItem() {
     const item = Object.assign({}, this.data[0])
     for (let key in item) {
@@ -111,6 +95,11 @@ class CRUD {
     }
     console.log(txt)
     return txt
+  }
+  #setItemId() {
+    this.data = this.data.map((item) => {
+      return item._id ? item : { _id: this.#makeId(), ...item }
+    })
   }
   #saveToStorage() {
     localStorage.setItem(this.lcKey, JSON.stringify(this.data))
