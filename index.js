@@ -28,9 +28,9 @@ var items = [
 ]
 
 class CRUD {
-  constructor(data, localStorage, key, promiseBased) {
+  constructor(data, isSaveToLS, key, promiseBased = false) {
     this.data = data
-    this.isSaveToLS = localStorage
+    this.isSaveToLS = isSaveToLS
     this.lcKey = key
     this.isAsync = promiseBased
     // this.itemId = CRUD.makeId()
@@ -38,7 +38,7 @@ class CRUD {
 
   query() {
     // filtering options
-    return this.data
+    return this.isAsync ? Promise.resolve(this.data) : this.data
   }
   remove(entityId) {
     const idx = this.data.findIndex((item) => item._id === entityId)
@@ -56,12 +56,14 @@ class CRUD {
   }
 
   add(entity) {
-    entity._id = this.#makeId()
-    this.data = [...this.data, entity]
+    const addedEntity = Object.assign({ _id: this.#makeId() }, entity)
+
+    this.data = [...this.data, addedEntity]
+    return this.isAsync ? Promise.resolve(addedEntity) : addedEntity
   }
 
   getEmptyItem() {
-    const item = JSON.parse(JSON.stringify(this.data[0]))
+    const item = Object.assign({}, this.data[0])
     for (let key in item) {
       if (typeof item[key] === 'string') {
         item[key] = ''
@@ -89,39 +91,24 @@ class CRUD {
   }
 }
 
-const crudService = new CRUD(items, true, 'tasks', true)
-console.log('crudService:', crudService)
+const crudService = new CRUD(items, true, 'tasks', false)
+// console.log('crudService:', crudService)
 
 // console.log(remove('101'))
 // function remove(taskId) {
 //   crudService.remove(taskId)
 // }
 
-// const task = {
-//   _id: '102',
-//   content: 'updated',
-// }
-
-// update(task)
-// function update(task) {
-//   crudService.update(task)
-// }
-
 const task = {
-  content: 'just crated',
-}
-const task1 = {
-  content: 'just crated',
+  content: 'added',
 }
 
 add(task)
-add(task1)
-
 function add(task) {
   crudService.add(task)
 }
 
-console.log('getting all items:', query())
+console.log(query())
 function query() {
   return crudService.query()
 }
