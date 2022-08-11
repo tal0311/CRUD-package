@@ -16,6 +16,7 @@ var items = [
   {
     _id: '102',
     content: 'some task',
+    timeStamp: 3333333,
   },
   {
     _id: '103',
@@ -28,16 +29,21 @@ var items = [
 ]
 
 class CRUD {
-  constructor(data, isSaveToLS, key, promiseBased = false) {
+  constructor(data, isCache, key, promiseBased = false) {
     this.data = data
-    this.isSaveToLS = isSaveToLS
+    this.isCache = isCache
     this.lcKey = key
     this.isAsync = promiseBased
-    // this.itemId = CRUD.makeId()
   }
 
   query() {
-    // filtering options
+    const data = this.#loadFromStorage()
+    if (data && data.length > 0) {
+      this.isAsync ? Promise.resolve(data) : data
+      this.data = data
+    }
+    this.#setTimestamp(this.data)
+    this.#saveToStorage()
     return this.isAsync ? Promise.resolve(this.data) : this.data
   }
   remove(entityId) {
@@ -46,7 +52,10 @@ class CRUD {
   }
   update(entity) {
     const idx = this.data.findIndex((item) => item._id === entity._id)
+    entity = this.#setUpdateStamp(entity)
+    console.log('updatetime:', entity)
     this.data.splice(idx, 1, entity)
+    this.#saveToStorage()
   }
   setData(data) {
     this.data = data
@@ -56,9 +65,12 @@ class CRUD {
   }
 
   add(entity) {
-    const addedEntity = Object.assign({ _id: this.#makeId() }, entity)
-
+    const addedEntity = Object.assign(
+      { _id: this.#makeId(), timeStamp: Date.now() },
+      entity
+    )
     this.data = [...this.data, addedEntity]
+    this.#saveToStorage()
     return this.isAsync ? Promise.resolve(addedEntity) : addedEntity
   }
 
@@ -78,6 +90,16 @@ class CRUD {
     return item
   }
   // private methods
+  #setTimestamp(data) {
+    console.log('before stamp:', data)
+    this.data = data.map((item) => {
+      return item.timeStamp ? item : { ...item, timeStamp: Date.now() }
+    })
+  }
+  #setUpdateStamp(item) {
+    item.updatedStamp = Date.now()
+    return item
+  }
   #makeId(length = 5) {
     var txt = ''
     var possible =
@@ -88,6 +110,13 @@ class CRUD {
     }
     console.log(txt)
     return txt
+  }
+  #saveToStorage() {
+    localStorage.setItem(this.lcKey, JSON.stringify(this.data))
+  }
+  #loadFromStorage() {
+    console.log(localStorage)
+    return JSON.parse(localStorage.getItem(this.lcKey))
   }
 }
 
@@ -100,12 +129,13 @@ const crudService = new CRUD(items, true, 'tasks', false)
 // }
 
 const task = {
+  _id: 'FHhA7',
   content: 'added',
 }
 
-add(task)
-function add(task) {
-  crudService.add(task)
+update(task)
+function update(task) {
+  crudService.update(task)
 }
 
 console.log(query())
@@ -118,7 +148,7 @@ function query() {
 //   return crudService.getById(taskId)
 // }
 
-getEmptyTask()
-function getEmptyTask() {
-  console.log(crudService.getEmptyItem())
-}
+// getEmptyTask()
+// function getEmptyTask() {
+//   console.log(crudService.getEmptyItem())
+// }
