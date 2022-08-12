@@ -20,7 +20,7 @@ function init() {
 
 function query() {
   crudService.query()
-  getActivities()
+  // getActivities()
 }
 
 function add() {
@@ -28,16 +28,16 @@ function add() {
     content: 'addded',
   }
   crudService.add(item)
-  getActivities()
+  // getActivities()
 }
 function remove() {
-  crudService.remove('eWMPup87')
-  getActivities()
+  crudService.remove('rwInqMWX')
+  // getActivities()
 }
 function getActivities() {
   console.log(crudService.activities)
 }
 function undo() {
-  crudService.undoAction()
-  getActivities()
+  console.log('UPDATED DATA', crudService.undoAction())
+  // getActivities()
 }

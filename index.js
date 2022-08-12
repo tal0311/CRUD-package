@@ -18,13 +18,14 @@ var items = [
 ]
 
 class CRUD {
-  constructor(data, isCache, key = null, promiseBased = false) {
+  constructor(data, isCache, key = null, promiseBased = false, baseURL = null) {
     this.data = data
     this.isCache = isCache
     this.lcKey = key
     this.isAsync = promiseBased
     this.activities = []
-    this.prevKey = 'prev-state'
+    this.prevState = []
+    this.baseURL = baseURL
     console.log('CRUD service is online')
   }
 
@@ -53,6 +54,7 @@ class CRUD {
     this.#saveToStorage()
   }
   update(entity) {
+    this.#savePrevState()
     const idx = this.data.findIndex((item) => item._id === entity._id)
     entity = this.#setUpdateStamp(entity)
     this.data.splice(idx, 1, entity)
@@ -90,6 +92,13 @@ class CRUD {
     this.#addActivity('getting empty item')
     return item
   }
+  undoAction() {
+    const prevState = this.#loadPrevState()
+    this.data = prevState
+    this.#saveToStorage()
+    this.#addActivity('recovering last step')
+    return this.data
+  }
   // private methods
   #setTimestamp(data) {
     this.data = data.map((item) => {
@@ -124,26 +133,20 @@ class CRUD {
     }
     this.activities.push(activity)
   }
+  // SAVING TO LOCAL STORAGE
   #saveToStorage() {
     localStorage.setItem(this.lcKey, JSON.stringify(this.data))
   }
   #loadFromStorage() {
     return JSON.parse(localStorage.getItem(this.lcKey))
   }
-  undoAction() {
-    this.#loadPrevState()
-    const prevState = this.#loadPrevState()
-    this.data = prevState
-    this.#savePrevState()
-    this.#addActivity('recovering last step')
-    this.#saveToStorage()
-    return this.data
-  }
+
+  // UNDO
   #savePrevState() {
-    localStorage.setItem(this.prevKey, JSON.stringify(this.data))
+    this.prevState = [...this.prevState, this.data]
   }
   #loadPrevState() {
-    return JSON.parse(localStorage.getItem(this.prevKey))
+    return this.prevState.pop()
   }
 }
 
