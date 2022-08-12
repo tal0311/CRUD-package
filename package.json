@@ -1,0 +1,24 @@
+{
+  "name": "crud-suit",
+  "version": "1.0.0",
+  "description": "This package gives you a simple CRUD service for any initial development, or prototyping for web applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tal0311/CRUD-package.git"
+  },
+  "keywords": [
+    "crud",
+    "CRUD",
+    "service"
+  ],
+  "author": "Tal Amit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tal0311/CRUD-package/issues"
+  },
+  "homepage": "https://github.com/tal0311/CRUD-package#readme"
+}
