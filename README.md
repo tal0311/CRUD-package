@@ -26,25 +26,25 @@ const crudService = new CRUD([data | Array], [save to LocalStorage | boolean], [
 1. query - will return the data Array  
    When calling this function, a timestamp key will be generated on each object in the Array.
 
-```bash
+```
 crudService.query()
 ```
 
 2. getById - will take un \_id and will return the object matching that \_id
 
-```bash
+```
 crudService.getById(entityId)
 ```
 
 3. remove - will take \_id end splice it from the data Array. will not return any data.
 
-```bash
+```
 crudService.remove(entityId)
 ```
 
 4. getEmptyItem - will return un empty item based on the first object in your data Array
 
-```bash
+```
 crudService.getEmptyItem()
 ```
 
@@ -52,7 +52,7 @@ crudService.getEmptyItem()
    will return the new object that was created with the \_id.  
    When calling this function, a timestamp key will be generated on the added object.
 
-```bash
+```
 crudService.add(entity)
 ```
 
@@ -60,7 +60,7 @@ crudService.add(entity)
    will not return any data.  
    When calling this function, an updatedStamp key will be created on each object in the Array.
 
-```bash
+```
 crudService.update(entity)
 ```
 
@@ -68,20 +68,20 @@ crudService.update(entity)
    It will return the last snapShot of you'r data before the changes.
    this method will not save the snapShot Array to localStorage.
 
-```bash
+```
 crudService.undoAction()
 ```
 
 8. getActivities - will keep record of all actions done by the service and timestamp it.
    It will return an activities Array with objects describing the action.
 
-```bash
+```
 crudService.getActivities()
 ```
 
 # Parameters
 
-```bash
+```
 new CRUD([data | Array], [save to LocalStorage | boolean], [name of key in LocalStorage | string], [asynchronous CRUD | boolean])
 ```
 
