@@ -24,6 +24,7 @@ class CRUD {
     this.lcKey = key
     this.isAsync = promiseBased
     this.activities = []
+    this.prevKey = 'prev-state'
     console.log('CRUD service is online')
   }
 
@@ -45,9 +46,11 @@ class CRUD {
     return this.isAsync ? Promise.resolve(this.data) : this.data
   }
   remove(entityId) {
+    this.#savePrevState()
     const idx = this.data.findIndex((item) => item._id === entityId)
     this.data.splice(idx, 1)
     this.#addActivity(`item with id:${entityId} was removed`)
+    this.#saveToStorage()
   }
   update(entity) {
     const idx = this.data.findIndex((item) => item._id === entity._id)
@@ -61,6 +64,7 @@ class CRUD {
     return this.data.find((item) => item._id === entityId)
   }
   add(entity) {
+    this.#savePrevState()
     const addedEntity = Object.assign(
       { _id: this.#makeId(), timeStamp: Date.now() },
       entity
@@ -125,6 +129,21 @@ class CRUD {
   }
   #loadFromStorage() {
     return JSON.parse(localStorage.getItem(this.lcKey))
+  }
+  undoAction() {
+    this.#loadPrevState()
+    const prevState = this.#loadPrevState()
+    this.data = prevState
+    this.#savePrevState()
+    this.#addActivity('recovering last step')
+    this.#saveToStorage()
+    return this.data
+  }
+  #savePrevState() {
+    localStorage.setItem(this.prevKey, JSON.stringify(this.data))
+  }
+  #loadPrevState() {
+    return JSON.parse(localStorage.getItem(this.prevKey))
   }
 }
 
