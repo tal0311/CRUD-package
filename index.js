@@ -18,14 +18,13 @@ var items = [
 ]
 
 class CRUD {
-  constructor(data, isCache, key = null, promiseBased = false, baseURL = null) {
+  constructor(data, isCache, key = null, promiseBased = false) {
     this.data = data
     this.isCache = isCache
     this.lcKey = key
     this.isAsync = promiseBased
     this.activities = []
     this.prevState = []
-    this.baseURL = baseURL
     console.log('CRUD service is online')
   }
 
