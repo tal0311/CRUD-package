@@ -1,22 +1,5 @@
 'use strict'
 
-var items = [
-  {
-    content: 'some task',
-    isDone: true,
-  },
-  {
-    content: 'some task',
-    timeStamp: 3333333,
-  },
-  {
-    content: 'some task',
-  },
-  {
-    content: 'some task',
-  },
-]
-
 class CRUD {
   constructor(data, isCache, key = null, promiseBased = false) {
     this.data = data
@@ -49,7 +32,7 @@ class CRUD {
     this.#savePrevState()
     const idx = this.data.findIndex((item) => item._id === entityId)
     this.data.splice(idx, 1)
-    this.#addActivity(`item with id:${entityId} was removed`)
+    this.#addActivity(`Item with id: ${entityId} was removed`)
     this.#saveToStorage()
   }
   update(entity) {
@@ -58,10 +41,10 @@ class CRUD {
     entity = this.#setUpdateStamp(entity)
     this.data.splice(idx, 1, entity)
     this.#saveToStorage()
-    this.#addActivity(`item with id:${entity._id} was updated`)
+    this.#addActivity(`Item with id: ${entity._id} was updated`)
   }
   getById(entityId) {
-    this.#addActivity(`item with id:${entityId} was requested`)
+    this.#addActivity(`Item with id: ${entityId} was requested`)
     return this.data.find((item) => item._id === entityId)
   }
   add(entity) {
@@ -72,7 +55,7 @@ class CRUD {
     )
     this.data = [...this.data, addedEntity]
     this.#saveToStorage()
-    this.#addActivity(`item with _id: ${addedEntity._id} was added`)
+    this.#addActivity(`item with id: ${addedEntity._id} was added`)
     return this.isAsync ? Promise.resolve(addedEntity) : addedEntity
   }
   getEmptyItem() {
@@ -88,17 +71,17 @@ class CRUD {
         item[key] = 0
       }
     }
-    this.#addActivity('getting empty item')
+    this.#addActivity('Getting empty item')
     return item
   }
   undoAction() {
     const prevState = this.#loadPrevState()
     this.data = prevState
     this.#saveToStorage()
-    this.#addActivity('recovering last step')
+    this.#addActivity('Recovering last step')
     return this.data
   }
-  // private methods
+  // PRIVATE METHODS
   #setTimestamp(data) {
     this.data = data.map((item) => {
       return item.timeStamp ? item : { ...item, timeStamp: Date.now() }
@@ -112,11 +95,9 @@ class CRUD {
     var txt = ''
     var possible =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
     for (var i = 0; i < length; i++) {
       txt += possible.charAt(Math.floor(Math.random() * possible.length))
     }
-
     return txt
   }
   #setItemId() {
@@ -139,8 +120,7 @@ class CRUD {
   #loadFromStorage() {
     return JSON.parse(localStorage.getItem(this.lcKey))
   }
-
-  // UNDO
+  // UNDO METHODS
   #savePrevState() {
     this.prevState = [...this.prevState, this.data]
   }
