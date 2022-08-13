@@ -1,14 +1,15 @@
 'use strict'
 
 class CRUD {
-  constructor(data, isCache, key = null, promiseBased = false) {
+  constructor(data, isCache, key = null, promiseBased = false, baseURL) {
     this.data = data
     this.isCache = isCache
     this.lcKey = key
     this.isAsync = promiseBased
     this.activities = []
     this.prevState = []
-    console.log('CRUD service is online')
+    this.baseURL = baseURL
+    console.log('%c CRUD service is online', 'color: #bada55')
   }
 
   query() {
