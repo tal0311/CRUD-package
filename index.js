@@ -116,9 +116,15 @@ class CRUD {
   }
   // SAVING TO LOCAL STORAGE
   #saveToStorage() {
+    if(!this.lcKey) {
+      return
+    }
     localStorage.setItem(this.lcKey, JSON.stringify(this.data))
   }
   #loadFromStorage() {
+    if(!this.lcKey) {
+      return
+    }
     return JSON.parse(localStorage.getItem(this.lcKey))
   }
   // UNDO METHODS
