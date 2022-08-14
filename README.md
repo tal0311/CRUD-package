@@ -8,7 +8,7 @@ Package Features:
 2. Synchronous, or asynchronous operation.
 3. Total changes Array - the package will record any action done by the service,  
    and will give access to that Array of changes. Each action will be timestamped.
-4. timestamp and updatedStamp.
+4. Timestamp and updatedStamp.
 
 ## How to use
 
