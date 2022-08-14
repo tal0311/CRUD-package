@@ -16,10 +16,10 @@ window.add = add
 window.undo = undo
 
 var data = [
-  { content: 'som info' },
-  { content: 'som info' },
-  { content: 'som info' },
-  { content: 'som info' },
+  { content: 'some info1' },
+  { content: 'some info2' },
+  { content: 'some info3' },
+  { content: 'some info4' },
 ]
 var crudService
 function init() {
