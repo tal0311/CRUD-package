@@ -21,7 +21,7 @@ class CRUD {
     this.#setTimestamp(this.data)
     this.#saveToStorage()
     this.#addActivity(
-      `All data with ${
+      `Data ${
         this.lcKey
           ? `with local storage key \"${this.lcKey}\"`
           : 'without local storage key'
