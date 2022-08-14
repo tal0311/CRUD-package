@@ -4,7 +4,7 @@ This package gives you a simple CRUD service for any initial development, or pro
 
 Package Features:
 
-1. Saving to LocalStorage,
+1. Saving to LocalStorage.
 2. Synchronous, or asynchronous operation.
 3. Total changes Array - the package will record any action done by the service,  
    and will give access to that Array of changes. Each action will be timestamped.
