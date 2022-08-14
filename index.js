@@ -46,7 +46,8 @@ class CRUD {
   }
   getById(entityId) {
     this.#addActivity(`Item with id: ${entityId} was requested`)
-    return this.data.find((item) => item._id === entityId)
+    const item = this.data.find((item) => item._id === entityId)
+    return this.isAsync ? Promise.resolve(item) : item
   }
   add(entity) {
     this.#savePrevState()
@@ -116,13 +117,13 @@ class CRUD {
   }
   // SAVING TO LOCAL STORAGE
   #saveToStorage() {
-    if(!this.lcKey) {
+    if (!this.lcKey) {
       return
     }
     localStorage.setItem(this.lcKey, JSON.stringify(this.data))
   }
   #loadFromStorage() {
-    if(!this.lcKey) {
+    if (!this.lcKey) {
       return
     }
     return JSON.parse(localStorage.getItem(this.lcKey))
