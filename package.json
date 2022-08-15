@@ -1,6 +1,6 @@
 {
   "name": "crud-suit",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "This package gives you a simple CRUD service for any initial development, or prototyping for web applications.",
   "main": "index.js",
   "scripts": {
