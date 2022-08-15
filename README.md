@@ -30,7 +30,7 @@ const crudService = new CRUD([data | Array], [save to LocalStorage | boolean], [
 crudService.query()
 ```
 
-2. getById - will take un \_id and will return the object matching that \_id
+2. getById - will take an \_id and will return the object matching that \_id
 
 ```
 crudService.getById(entityId)
@@ -48,7 +48,7 @@ crudService.remove(entityId)
 crudService.getEmptyItem()
 ```
 
-5. add - will take a new data object, add it to the data Array with un \_id,  
+5. add - will take a new data object, add it to the data Array with an \_id,  
    and will return the new object that was created with the \_id.  
    When calling this function, a timestamp key will be generated on the added object.
 
