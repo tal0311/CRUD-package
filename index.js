@@ -1,16 +1,14 @@
 'use strict'
 
-import axios from 'axios'
 
 class CRUD {
-  constructor(data, isCache, key = null, promiseBased = false, baseURL) {
+  constructor(data, isCache, key = null, promiseBased = false) {
     this.data = data
     this.isCache = isCache
     this.lcKey = key
     this.isAsync = promiseBased
     this.activities = []
     this.prevState = []
-    this.baseURL = baseURL
     console.log('%c CRUD service is online', 'color: #bada55')
   }
 
