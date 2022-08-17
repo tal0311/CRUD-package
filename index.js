@@ -1,7 +1,5 @@
 'use strict'
 
-import axios from 'axios'
-
 class CRUD {
   constructor(data, isCache, key = null, promiseBased = false) {
     this.data = data
