@@ -12,7 +12,6 @@ class CRUD {
   }
 
   query() {
-    //if baseURL
     const data = this.#loadFromStorage()
     if (data && data.length > 0) {
       this.data = data
@@ -31,7 +30,6 @@ class CRUD {
   }
   remove(entityId) {
     this.#savePrevState()
-    //if baseURL
     const idx = this.data.findIndex((item) => item._id === entityId)
     this.data.splice(idx, 1)
     this.#addActivity(`Item with id: ${entityId} was removed`)
@@ -39,7 +37,6 @@ class CRUD {
   }
   update(entity) {
     this.#savePrevState()
-    //if baseURL
     const idx = this.data.findIndex((item) => item._id === entity._id)
     entity = this.#setUpdateStamp(entity)
     this.data.splice(idx, 1, entity)
@@ -47,14 +44,12 @@ class CRUD {
     this.#addActivity(`Item with id: ${entity._id} was updated`)
   }
   getById(entityId) {
-    //If baseURL
     this.#addActivity(`Item with id: ${entityId} was requested`)
     const item = this.data.find((item) => item._id === entityId)
     return this.isAsync ? Promise.resolve(item) : item
   }
   add(entity) {
     this.#savePrevState()
-    //If baseURL
     const addedEntity = Object.assign(
       { _id: this.#makeId(), timeStamp: Date.now() },
       entity
@@ -121,7 +116,6 @@ class CRUD {
   }
   // SAVING TO LOCAL STORAGE
   #saveToStorage() {
-    //&& ! baseURL
     if (!this.lcKey) {
       return
     }
