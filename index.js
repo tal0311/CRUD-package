@@ -50,9 +50,9 @@ class CRUD {
   }
   add(entity) {
     this.#savePrevState()
-    const addedEntity = Object.assign(
-      { _id: this.#makeId(), timeStamp: Date.now() },
-      entity
+
+    const addedEntity = JSON.parse(
+      JSON.stringify({ ...entity, _id: this.#makeId(), timeStamp: Date.now() })
     )
     this.data = [...this.data, addedEntity]
     this.#saveToStorage()
@@ -60,7 +60,8 @@ class CRUD {
     return this.isAsync ? Promise.resolve(addedEntity) : addedEntity
   }
   getEmptyItem() {
-    const item = Object.assign({}, this.data[0])
+    const item = JSON.parse(JSON.stringify(this.data[0]))
+
     for (let key in item) {
       if (typeof item[key] === 'string') {
         item[key] = ''
@@ -93,13 +94,7 @@ class CRUD {
     return item
   }
   #makeId(length = 8) {
-    var txt = ''
-    var possible =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    for (var i = 0; i < length; i++) {
-      txt += possible.charAt(Math.floor(Math.random() * possible.length))
-    }
-    return txt
+    return (Math.random() + 1).toString(36).substring(2)
   }
   #setItemId() {
     this.data = this.data.map((item) => {
