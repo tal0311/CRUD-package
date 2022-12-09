@@ -34,6 +34,8 @@ class CRUD {
     this.data.splice(idx, 1)
     this.#addActivity(`Item with id: ${entityId} was removed`)
     this.#saveToStorage()
+    const msg = 'Item successful removed'
+    return this.isAsync ? Promise.resolve(msg) : msg
   }
   update(entity) {
     this.#savePrevState()
