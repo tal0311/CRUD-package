@@ -36,7 +36,7 @@ crudService.query()
 crudService.getById(entityId)
 ```
 
-3. remove - will take \_id and splice it from the data Array. will not return any data.
+3. remove - will take \_id and splice it from the data Array. will return a success message.
 
 ```
 crudService.remove(entityId)
@@ -57,7 +57,7 @@ crudService.add(entity)
 ```
 
 6. update - will find an object inside the data Array and replace it with the new object.  
-   Will not return any data.  
+   Will return the \_id of updated item.  
    When calling this function, an updatedStamp key will be created on each object in the Array.
 
 ```

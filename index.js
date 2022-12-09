@@ -44,6 +44,7 @@ class CRUD {
     this.data.splice(idx, 1, entity)
     this.#saveToStorage()
     this.#addActivity(`Item with id: ${entity._id} was updated`)
+    return this.isAsync ? Promise.resolve(entity._id) : entity._id
   }
   getById(entityId) {
     this.#addActivity(`Item with id: ${entityId} was requested`)
